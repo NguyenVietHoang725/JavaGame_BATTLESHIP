@@ -10,17 +10,16 @@ public class GameController implements IController {
 
     private GameLogic game;
     private GameView view;
-    private InputHandler inputHandler;
+    private InputHandler input;
     private boolean isPaused;
 
     @Override
     public void init() {
         this.game = new GameLogic();
         this.view = new GameView();
-        this.inputHandler = new InputHandler(game);
+        this.input = new InputHandler(game);
         this.isPaused = false;
 
-        // Có thể đọc file config, khởi tạo game mode, hiển thị menu khởi động...
         view.showMessage("🎮 Game Battleship đã khởi tạo!");
     }
 
@@ -28,7 +27,7 @@ public class GameController implements IController {
     public void start() {
         view.showMessage("🚀 BẮT ĐẦU GAME BATTLESHIP");
 
-        // Đặt một số tàu mẫu (test)
+        // Test ship
         game.placeShip(0, 0, 3, true);
         game.placeShip(2, 2, 2, false);
 
@@ -36,14 +35,43 @@ public class GameController implements IController {
             if (isPaused) continue;
 
             view.printBoard(game.getBoard(), false);
-            view.showMessage("Nhập tọa độ (row col) để bắn:");
+            view.showSelectAction(); // Hiển thị menu lựa chọn
 
-            Move move = inputHandler.getMove();
+            int choice = input.getAction();
 
-            String result = game.attack(move.getRow(), move.getCol());
-            move.setNewValue(game.getNode(move.getRow(), move.getCol()).getStatus());
-
-            view.showMessage("🎯 Kết quả: " + result);
+            switch (choice) {
+                case 1 -> {
+                    view.showMessage("🔫 Nhập tọa độ bắn (x y):");
+                    Move move = input.getMove();
+                    String result = game.attack(move.getRow(), move.getCol());
+                    move.setNewValue(game.getNode(move.getRow(), move.getCol()).getStatus());
+                    view.showMessage("🎯 Kết quả: " + result);
+                }
+                case 2 -> {
+                    if (game.undo()) {
+                        view.showMessage("↩️ Đã hoàn tác bước đi.");
+                    } else {
+                        view.showMessage("❌ Không thể hoàn tác.");
+                    }
+                }
+                case 3 -> {
+                    if (game.redo()) {
+                        view.showMessage("↪️ Đã làm lại bước đi.");
+                    } else {
+                        view.showMessage("❌ Không thể làm lại.");
+                    }
+                }
+                case 4 -> {
+                    pause();
+                }
+                case 5 -> {
+                    view.showMessage("❌ Thoát game...");
+                    return;
+                }
+                default -> {
+                    view.showMessage("⚠️ Lựa chọn không hợp lệ!");
+                }
+            }
         }
 
         end();
@@ -52,7 +80,9 @@ public class GameController implements IController {
     @Override
     public void pause() {
         isPaused = true;
-        view.showMessage("⏸ Game đã tạm dừng.");
+        view.showMessage("⏸ Game đã tạm dừng. Nhấn bất kỳ phím nào để tiếp tục...");
+        input.waitForEnter();
+        isPaused = false;
     }
 
     @Override

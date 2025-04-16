@@ -29,6 +29,16 @@ public class GameView {
             default: return '~';
         }
     }
+    
+    public void showSelectAction() {
+        System.out.println("\n🔸 Hành động:");
+        System.out.println("1. Bắn");
+        System.out.println("2. Undo");
+        System.out.println("3. Redo");
+        System.out.println("4. Tạm dừng");
+        System.out.println("5. Thoát\n");
+    }
+
 
     public void showMessage(String message) {
         System.out.println(message);

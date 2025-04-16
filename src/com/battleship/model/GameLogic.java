@@ -2,6 +2,7 @@ package com.battleship.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import com.battleship.enums.NodeStatus;
 
@@ -11,7 +12,10 @@ public class GameLogic {
 	private Node[][] board;
 	private List<Ship> ships;
 	private final int BOARD_SIZE = 10;
+	private Stack<Move> undoStack = new Stack<>();
+	private Stack<Move> redoStack = new Stack<>();
 	
+	// Constructor
 	public GameLogic() {
 		board = new Node[BOARD_SIZE][BOARD_SIZE];
 		ships = new ArrayList<>();
@@ -50,22 +54,97 @@ public class GameLogic {
 	public String attack(int x, int y) {
         if (!isValidCoordinate(x, y)) return "Invalid";
 
-        Node node = board[x][y];
+        Node targetNode = board[x][y];
 
-        if (node.getStatus() == NodeStatus.SHIP) {
-            node.setStatus(NodeStatus.HIT);
-            ships.forEach(Ship::updateStatus);
-            return "Hit";
-        } else if (node.getStatus() == NodeStatus.EMPTY) {
-            node.setStatus(NodeStatus.MISS);
-            return "Miss";
-        } else {
-            return "Already Attacked";
+        String result = updateNodeStatus(targetNode);
+
+        if (result.equals("Hit")) {
+            for (Ship ship : ships) {
+                ship.updateStatus();
+            }
         }
+
+        return result;
     }
 	
+	private String updateNodeStatus(Node node) {
+		NodeStatus prev = node.getStatus();
+		NodeStatus newStatus;
+		
+        switch (prev) {
+            case SHIP:
+                newStatus = NodeStatus.HIT;
+                break;
+
+            case EMPTY:
+                newStatus = NodeStatus.MISS;
+                break;
+
+            case HIT:
+            case MISS:
+                return "Already Attacked";
+
+            default:
+                return "Unknown";
+        }
+        
+        node.setStatus(newStatus);
+        
+        recordMove(node.getX(), node.getY(), prev, newStatus);
+
+        return newStatus == NodeStatus.HIT ? "Hit" : "Miss";
+    }
+	
+	private void recordMove(int x, int y, NodeStatus prev, NodeStatus next) {
+	    undoStack.push(new Move(x, y, prev, next));
+	    redoStack.clear(); // Sau mỗi hành động mới, redo phải bị xóa
+	}
+
+	
+	public boolean undo() {
+	    if (!canUndo()) return false;
+
+	    Move move = undoStack.pop();
+	    Node node = board[move.getRow()][move.getCol()];
+
+	    if (node.getStatus() != move.getNewValue()) return false; // đảm bảo đúng trạng thái
+
+	    node.setStatus(move.getPrevValue());
+	    redoStack.push(move);
+	    return true;
+	}
+
+	
+	public boolean redo() {
+	    if (!canRedo()) return false;
+
+	    Move move = redoStack.pop();
+	    Node node = board[move.getRow()][move.getCol()];
+
+	    if (node.getStatus() != move.getPrevValue()) return false; // đảm bảo đúng trạng thái
+
+	    node.setStatus(move.getNewValue());
+	    undoStack.push(move);
+	    return true;
+	}
+
+	
+	public boolean canUndo() {
+	    return !undoStack.isEmpty();
+	}
+
+	public boolean canRedo() {
+	    return !redoStack.isEmpty();
+	}
+	
 	public boolean isGameOver() {
-        return ships.stream().allMatch(Ship::isSunk);
+		for (Ship ship : ships) {
+	        if (!ship.isSunk()) {
+	            return false;
+	        }
+	    }
+
+	    return true;
     }
 	
 	private boolean isValidCoordinate(int x, int y) {
