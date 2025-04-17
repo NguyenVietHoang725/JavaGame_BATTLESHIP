@@ -3,7 +3,8 @@ package com.battleship.view;
 import com.battleship.model.Node;
 
 public class GameView {
-	public void printBoard(Node[][] board, boolean revealShips) {
+
+    public void printBoard(Node[][] board, boolean revealShips) {
         System.out.print("   ");
         for (int i = 0; i < board.length; i++) {
             System.out.printf("%2d ", i);
@@ -29,16 +30,23 @@ public class GameView {
             default: return '~';
         }
     }
-    
-    public void showSelectAction() {
-        System.out.println("\n🔸 Hành động:");
-        System.out.println("1. Bắn");
+
+    // Menu hành động trong giai đoạn SETUP (đặt tàu)
+    public void showShipPlacementMenu() {
+        System.out.println("\n🔧 Hành động đặt tàu:");
+        System.out.println("1. Đặt tàu");
         System.out.println("2. Undo");
         System.out.println("3. Redo");
-        System.out.println("4. Tạm dừng");
-        System.out.println("5. Thoát\n");
+        System.out.println("4. Bắt đầu chơi\n");
     }
 
+    // Menu hành động trong giai đoạn PLAY (tấn công)
+    public void showBattleMenu() {
+        System.out.println("\n🎯 Hành động tấn công:");
+        System.out.println("1. Bắn");
+        System.out.println("2. Tạm dừng");
+        System.out.println("3. Thoát\n");
+    }
 
     public void showMessage(String message) {
         System.out.println(message);

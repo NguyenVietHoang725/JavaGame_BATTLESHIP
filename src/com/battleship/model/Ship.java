@@ -9,6 +9,7 @@ public class Ship {
 	// Attributes
 	private int size;
 	private Node[] nodes;
+	
 	private boolean isSunk;
 
 	// Constructor

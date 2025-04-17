@@ -1,7 +1,6 @@
 package com.battleship.utils;
 
 import java.util.Scanner;
-
 import com.battleship.model.GameLogic;
 import com.battleship.model.Move;
 import com.battleship.view.GameView;
@@ -18,40 +17,43 @@ public class InputHandler {
         this.view = view;
     }
 
-    public int getAction() {
-        view.showMessage("🔧 Chọn hành động (1: Bắn, 2: Undo, 3: Redo, 4: Tạm dừng, 5: Thoát): ");
-        while (!scn.hasNextInt()) {
-            view.showMessage("Vui lòng nhập số hợp lệ!");
-            scn.next(); // bỏ qua đầu vào không phải số
-        }
-        return scn.nextInt();
+    // --- Dùng trong giai đoạn chơi ---
+    public int getBattleAction() {
+        view.showMessage("🔧 Chọn hành động (1: Bắn, 2: Tạm dừng, 3: Thoát): ");
+        return readInt();
+    }
+
+    // --- Dùng trong giai đoạn đặt tàu ---
+    public int getSetupAction() {
+        view.showMessage("🔧 Chọn hành động (1: Đặt tàu, 2: Undo, 3: Redo): ");
+        return readInt();
     }
 
     public Move getMove() {
-        int row = scn.nextInt();
-        int col = scn.nextInt();
+        int row = readInt();
+        int col = readInt();
         return new Move(row, col, game.getNode(row, col).getStatus(), null);
     }
 
     public void waitForEnter() {
         view.showMessage("Nhấn Enter để tiếp tục...");
-        scn.nextLine(); // đọc dòng cũ
+        scn.nextLine(); // clear buffer
         scn.nextLine(); // đợi Enter
     }
-    
+
     public int[] getPlaceShipWithSize(int size) {
         while (true) {
             try {
-                int x = scn.nextInt();
-                int y = scn.nextInt();
-                int dir = scn.nextInt(); // 0-ngang, 1-dọc
+                int x = readInt();
+                int y = readInt();
+                int dir = readInt(); // 0-ngang, 1-dọc
 
                 if (!validateShipPlacement(x, y, size, dir)) {
-                	view.showMessage("❌ Vị trí không hợp lệ hoặc trùng tàu khác. Hãy thử lại.");
-                	continue;
+                    view.showMessage("❌ Vị trí không hợp lệ hoặc trùng tàu khác. Hãy thử lại.");
+                    continue;
                 }
-                
-                return new int[] {x, y, dir};
+
+                return new int[] { x, y, dir };
             } catch (Exception e) {
                 view.showMessage("❌ Dữ liệu không hợp lệ. Nhập lại.");
                 scn.nextLine(); // clear input
@@ -72,5 +74,13 @@ public class InputHandler {
         }
 
         return true;
+    }
+
+    private int readInt() {
+        while (!scn.hasNextInt()) {
+            view.showMessage("⚠️ Vui lòng nhập số hợp lệ!");
+            scn.next(); // bỏ qua input không phải số
+        }
+        return scn.nextInt();
     }
 }

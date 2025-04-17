@@ -13,8 +13,10 @@ public class GameLogic {
 	private List<Ship> ships;
 	private final int BOARD_SIZE = 10;
 	private final int[] SHIP_SIZES = {2, 3, 3, 4, 5};
-	private Stack<Move> undoStack = new Stack<>();
-	private Stack<Move> redoStack = new Stack<>();
+	private Stack<ShipPlacement> placementUndoStack = new Stack<>();
+	private Stack<ShipPlacement> placementRedoStack = new Stack<>();
+	private List<Move> attackHistory = new ArrayList<>();
+
 	
 	// Constructor
 	public GameLogic() {
@@ -48,7 +50,11 @@ public class GameLogic {
 			node.setStatus(NodeStatus.SHIP);
 		}
 		
-		ships.add(new Ship(shipNodes.toArray(new Node[0])));
+		Node[] placedNodes = shipNodes.toArray(new Node[0]);
+		ships.add(new Ship(placedNodes));
+		placementUndoStack.push(new ShipPlacement(placedNodes));
+	    placementRedoStack.clear(); // clear redo sau khi đặt mới)
+		
 		return true;
 	}
 	
@@ -72,6 +78,10 @@ public class GameLogic {
 
         return result;
     }
+	
+	private void recordMove(int x, int y, NodeStatus prev, NodeStatus next) {
+	    attackHistory.add(new Move(x, y, prev, next));
+	}
 	
 	private String updateNodeStatus(Node node) {
 		NodeStatus prev = node.getStatus();
@@ -101,46 +111,46 @@ public class GameLogic {
         return newStatus == NodeStatus.HIT ? "Hit" : "Miss";
     }
 	
-	private void recordMove(int x, int y, NodeStatus prev, NodeStatus next) {
-	    undoStack.push(new Move(x, y, prev, next));
-	    redoStack.clear(); // Sau mỗi hành động mới, redo phải bị xóa
-	}
+	public boolean undoShipPlacement() {
+	    if (placementUndoStack.isEmpty()) return false;
 
-	
-	public boolean undo() {
-	    if (!canUndo()) return false;
+	    ShipPlacement lastPlacement = placementUndoStack.pop();
+	    for (Node node : lastPlacement.getNodes()) {
+	        node.setStatus(NodeStatus.EMPTY);
+	    }
 
-	    Move move = undoStack.pop();
-	    Node node = board[move.getRow()][move.getCol()];
+	    // Xóa khỏi danh sách tàu
+	    ships.removeIf(ship -> {
+	        Node[] shipNodes = ship.getNodes();
+	        return shipNodes.length == lastPlacement.getNodes().length &&
+	               java.util.Arrays.equals(shipNodes, lastPlacement.getNodes());
+	    });
 
-	    if (node.getStatus() != move.getNewValue()) return false; // đảm bảo đúng trạng thái
-
-	    node.setStatus(move.getPrevValue());
-	    redoStack.push(move);
+	    placementRedoStack.push(lastPlacement);
 	    return true;
 	}
 
-	
-	public boolean redo() {
-	    if (!canRedo()) return false;
+	public boolean redoShipPlacement() {
+	    if (placementRedoStack.isEmpty()) return false;
 
-	    Move move = redoStack.pop();
-	    Node node = board[move.getRow()][move.getCol()];
+	    ShipPlacement redoPlacement = placementRedoStack.pop();
+	    for (Node node : redoPlacement.getNodes()) {
+	        node.setStatus(NodeStatus.SHIP);
+	    }
 
-	    if (node.getStatus() != move.getPrevValue()) return false; // đảm bảo đúng trạng thái
-
-	    node.setStatus(move.getNewValue());
-	    undoStack.push(move);
+	    ships.add(new Ship(redoPlacement.getNodes()));
+	    placementUndoStack.push(redoPlacement);
 	    return true;
 	}
 
+
 	
-	public boolean canUndo() {
-	    return !undoStack.isEmpty();
+	public boolean canUndoPlacement() {
+	    return !placementUndoStack.isEmpty();
 	}
 
-	public boolean canRedo() {
-	    return !redoStack.isEmpty();
+	public boolean canRedoPlacement() {
+	    return !placementRedoStack.isEmpty();
 	}
 	
 	public boolean isGameOver() {
