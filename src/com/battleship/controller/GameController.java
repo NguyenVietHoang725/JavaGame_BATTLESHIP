@@ -17,7 +17,7 @@ public class GameController implements IController {
     public void init() {
         this.game = new GameLogic();
         this.view = new GameView();
-        this.input = new InputHandler(game);
+        this.input = new InputHandler(game, view);
         this.isPaused = false;
 
         view.showMessage("🎮 Game Battleship đã khởi tạo!");
@@ -26,10 +26,8 @@ public class GameController implements IController {
     @Override
     public void start() {
         view.showMessage("🚀 BẮT ĐẦU GAME BATTLESHIP");
-
-        // Test ship
-        game.placeShip(0, 0, 3, true);
-        game.placeShip(2, 2, 2, false);
+        
+        placeAllShips();
 
         while (!game.isGameOver()) {
             if (isPaused) continue;
@@ -45,7 +43,11 @@ public class GameController implements IController {
                     Move move = input.getMove();
                     String result = game.attack(move.getRow(), move.getCol());
                     move.setNewValue(game.getNode(move.getRow(), move.getCol()).getStatus());
-                    view.showMessage("🎯 Kết quả: " + result);
+                    
+                    if (result.contains("Sunk")) {
+                    	view.showMessage("💥 Một tàu đã bị đánh chìm!");
+                    }
+                    view.showMessage("🎯 Kết quả: " + result.replace(" & Sunk", ""));
                 }
                 case 2 -> {
                     if (game.undo()) {
@@ -90,4 +92,27 @@ public class GameController implements IController {
         view.printBoard(game.getBoard(), true);
         view.showMessage("🏁 Game kết thúc! Bạn đã tiêu diệt toàn bộ tàu.");
     }
+    
+    private void placeAllShips() {
+        view.showMessage("⚓ Hãy đặt 5 tàu theo thứ tự kích thước: [2, 3, 3, 4, 5]");
+
+        for (int size : game.getShipSizes()) {
+            boolean placed = false;
+
+            while (!placed) {
+                view.showMessage("🚢 Đặt tàu kích thước " + size + ": Nhập x y chiều(0-ngang, 1-dọc):");
+                int[] info = input.getPlaceShipWithSize(size); // Giả sử đã sửa InputHandler
+
+                placed = game.placeShip(info[0], info[1], size, info[2] == 0);
+
+                if (!placed) {
+                    view.showMessage("❌ Không thể đặt tàu tại vị trí này. Hãy thử lại.");
+                } else {
+                    view.showMessage("✅ Đặt thành công tàu kích thước " + size);
+                    view.printBoard(game.getBoard(), true); // Hiển thị bảng với tàu
+                }
+            }
+        }
+    }
+
 }

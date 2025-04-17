@@ -1,5 +1,7 @@
 package com.battleship.model;
 
+import java.util.Arrays;
+
 import com.battleship.enums.NodeStatus;
 
 public class Ship {
@@ -50,5 +52,9 @@ public class Ship {
 			}
 		}
 		isSunk = true;
+	}
+	
+	public boolean wasSunkNow() {
+	    return isSunk && Arrays.stream(nodes).anyMatch(node -> node.getStatus() == NodeStatus.HIT);
 	}
 }

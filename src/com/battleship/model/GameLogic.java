@@ -12,6 +12,7 @@ public class GameLogic {
 	private Node[][] board;
 	private List<Ship> ships;
 	private final int BOARD_SIZE = 10;
+	private final int[] SHIP_SIZES = {2, 3, 3, 4, 5};
 	private Stack<Move> undoStack = new Stack<>();
 	private Stack<Move> redoStack = new Stack<>();
 	
@@ -60,7 +61,12 @@ public class GameLogic {
 
         if (result.equals("Hit")) {
             for (Ship ship : ships) {
+            	boolean wasSunkBefore = ship.isSunk();
                 ship.updateStatus();
+                
+                if (!wasSunkBefore && ship.isSunk()) {
+                	result += " & Sunk";
+                }
             }
         }
 
@@ -162,4 +168,9 @@ public class GameLogic {
     public List<Ship> getShips() {
         return ships;
     }
+    
+    public int[] getShipSizes() {
+        return SHIP_SIZES;
+    }
+
 }
