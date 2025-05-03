@@ -1,17 +1,17 @@
 package com.battleship.model.logic;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.battleship.enums.AttackType;
 import com.battleship.model.attack.AttackInventory;
 import com.battleship.model.attack.AttackLogic;
 import com.battleship.model.board.Node;
 import com.battleship.model.player.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Lớp "ChallengeModeLogic" biểu diễn logic của chế độ chơi chống lại
- * 
+ *
  * @author Nguyen Viet Hoang
  * @version 1.0
  * @since 2025-04-28
@@ -45,26 +45,27 @@ public class ChallengeModeLogic extends GameLogic {
         // Có thể khởi tạo lại AttackInventory nếu muốn reset
     }
 
-    /** 
+    /**
      * Thực hiện tấn công, trả về danh sách các node bị bắn trúng.
      * Tăng số lượt bắn đã dùng.
-     * 
+     *
      * @param type Kiểu tấn công
      * @param x Tọa độ x
      * @param y Tọa độ y
      * @return Danh sách các node bị bắn trúng
      */
     public List<Node> playerAttack(AttackType type, int x, int y) {
-        if (isGameOver()) return new ArrayList<>();
-        if (!player.canAttack(x, y, type)) return new ArrayList<>();
+        if (isGameOver() || !player.canAttack(x, y, type)) {
+			return new ArrayList<>();
+		}
         shotsUsed++;
         return attackLogic.attack(type, x, y);
     }
 
-    /** 
+    /**
      * Cập nhật thời gian đã dùng (tính bằng giây).
      * Gọi phương thức này từ controller/timer mỗi giây hoặc mỗi lần cập nhật.
-     * 
+     *
      * @param seconds Thời gian đã dùng
      */
     public void updateTimeUsed(int seconds) {
@@ -73,7 +74,7 @@ public class ChallengeModeLogic extends GameLogic {
 
     /**
      * Kiểm tra game đã kết thúc chưa
-     * 
+     *
      * @return true nếu game đã kết thúc, false nếu ngược lại
      */
     @Override
@@ -84,7 +85,7 @@ public class ChallengeModeLogic extends GameLogic {
 
     /**
      * Kiểm tra người chơi đã thắng chưa
-     * 
+     *
      * @return true nếu người chơi đã thắng, false nếu ngược lại
      */
     @Override
@@ -95,16 +96,16 @@ public class ChallengeModeLogic extends GameLogic {
 
     /**
      * Lấy số lượt bắn đã dùng
-     * 
+     *
      * @return Số lượt bắn đã dùng
-     */ 
+     */
     public int getShotsUsed() {
         return shotsUsed;
     }
 
     /**
      * Lấy số lượt bắn còn lại
-     * 
+     *
      * @return Số lượt bắn còn lại
      */
     public int getShotsLeft() {
@@ -113,7 +114,7 @@ public class ChallengeModeLogic extends GameLogic {
 
     /**
      * Lấy thời gian đã dùng
-     * 
+     *
      * @return Thời gian đã dùng
      */
     public int getTimeUsed() {
@@ -122,7 +123,7 @@ public class ChallengeModeLogic extends GameLogic {
 
     /**
      * Lấy thời gian còn lại
-     * 
+     *
      * @return Thời gian còn lại
      */
     public int getTimeLeft() {
@@ -131,7 +132,7 @@ public class ChallengeModeLogic extends GameLogic {
 
     /**
      * Lấy số lượt bắn tối đa
-     * 
+     *
      * @return Số lượt bắn tối đa
      */
     public int getMaxShots() {
@@ -140,7 +141,7 @@ public class ChallengeModeLogic extends GameLogic {
 
     /**
      * Lấy thời gian tối đa
-     * 
+     *
      * @return Thời gian tối đa
      */
     public int getMaxTime() {

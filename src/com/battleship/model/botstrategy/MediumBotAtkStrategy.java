@@ -13,16 +13,16 @@ import com.battleship.model.board.Node;
 
 /**
  * Lớp "MediumBotAtkStrategy" biểu diễn chiến lược tấn công của bot trung bình
- * 
+ *
  * Cách hoạt động:
  * - Nếu bot vừa bắn trúng một ô có tàu, nó sẽ ưu tiên bắn tiếp các ô xung quanh ô đó (trái, phải, trên, dưới) trong các lượt tiếp theo.
  * - Nếu không có ô trúng nào để truy vết, bot sẽ bắn ngẫu nhiên như EasyBot.
- * 
+ *
  * Đặc điểm:
  * - Có "trí tuệ" hơn: biết truy vết tàu khi đã bắn trúng.
  * - Khi bắn trúng, khả năng đánh chìm tàu nhanh hơn.
  * - Khi không bắn trúng, vẫn bắn ngẫu nhiên.
- * 
+ *
  * @author Nguyen Viet Hoang
  * @version 1.0
  * @since 2025-04-28
@@ -35,7 +35,7 @@ public class MediumBotAtkStrategy implements IBotAttackStrategy, INotifiableBotS
     // --- CÁC PHƯƠNG THỨC KHÁC ---
     /**
      * Gọi phương thức này từ GameLogic khi bot bắn trúng tàu tại (x, y)
-     * 
+     *
      * @param x Tọa độ x của ô
      * @param y Tọa độ y của ô
      */
@@ -46,10 +46,10 @@ public class MediumBotAtkStrategy implements IBotAttackStrategy, INotifiableBotS
 
 	/**
 	 * Hàm chọn nước đi tiếp theo dựa trên chiến lược hiện tại.
-	 * 
+	 *
 	 * @param opponentBoard Bàn cờ của đối thủ (người chơi)
 	 * @return int[] {x, y} là tọa độ bot sẽ bắn
-	 */	
+	 */
     @Override
     public int[] chooseAttack(Board opponentBoard) {
         int size = opponentBoard.getBoardSize(); // Kích thước bàn cờ
@@ -70,7 +70,7 @@ public class MediumBotAtkStrategy implements IBotAttackStrategy, INotifiableBotS
         List<int[]> available = new ArrayList<>(); // Danh sách các ô có thể bắn
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
-                if (!nodes[x][y].isHit()) { // Nếu ô chưa bị bắn	
+                if (!nodes[x][y].isHit()) { // Nếu ô chưa bị bắn
                     available.add(new int[] { x, y });
                 }
             }
@@ -83,7 +83,7 @@ public class MediumBotAtkStrategy implements IBotAttackStrategy, INotifiableBotS
 
 	/**
 	 * Hàm lấy các ô xung quanh ô trúng gần nhất
-	 * 
+	 *
 	 * @param x Tọa độ x của ô
 	 * @param y Tọa độ y của ô
 	 * @param nodes Mảng ô trên bàn cờ
@@ -91,7 +91,7 @@ public class MediumBotAtkStrategy implements IBotAttackStrategy, INotifiableBotS
 	 * @return Danh sách các ô xung quanh
 	 */
     private List<int[]> getUnhitNeighbors(int x, int y, Node[][] nodes, int size) {
-        int[] dx = { 0, 0, 1, -1 }; // Các ô xung quanh	
+        int[] dx = { 0, 0, 1, -1 }; // Các ô xung quanh
         int[] dy = { 1, -1, 0, 0 }; // Các ô xung quanh
         List<int[]> neighbors = new ArrayList<>(); // Danh sách các ô xung quanh
         for (int d = 0; d < 4; d++) { // Lặp qua các ô xung quanh

@@ -10,15 +10,15 @@ import com.battleship.model.board.Node;
 
 /**
  * Lớp "EasyBotAtkStrategy" biểu diễn chiến lược tấn công của bot dễ dàng
- * 
+ *
  * Cách hoạt động:
  * - Bot chọn ngẫu nhiên một ô chưa bị bắn trên bàn cờ của đối thủ.
  * - Không quan tâm đến kết quả các lần bắn trước đó.
- * 
+ *
  * Đặc điểm:
  * - Đơn giản, dễ đoán, không có chiến lược tấn công gì cả.
  * - Người chơi dễ thắng nếu chơi cẩn thận.
- * 
+ *
  * @author Nguyen Viet Hoang
  * @version 1.0
  * @since 2025-04-28
@@ -30,7 +30,7 @@ public class EasyBotAtkStrategy implements IBotAttackStrategy {
 	// --- CÁC PHƯƠNG THỨC KHÁC ---
 	/**
 	 * Hàm chọn nước đi tiếp theo dựa trên chiến lược hiện tại.
-	 * 
+	 *
 	 * @param opponentBoard Bàn cờ của đối thủ (người chơi)
 	 * @return int[] {x, y} là tọa độ bot sẽ bắn
 	 */
@@ -48,7 +48,7 @@ public class EasyBotAtkStrategy implements IBotAttackStrategy {
 				}
 			}
 		}
-		if (available.isEmpty()) { // Nếu không có ô nào có thể bắn	
+		if (available.isEmpty()) { // Nếu không có ô nào có thể bắn
 			return new int[] { -1, -1 }; // Trả về tọa độ -1, -1
 		}
 		return available.get(random.nextInt(available.size())); // Trả về tọa độ ngẫu nhiên

@@ -2,7 +2,7 @@ package com.battleship.enums;
 
 /**
  * Enum biểu diễn các kiểu tấn công trong trò chơi
- * 
+ *
  * @author Nguyen Viet Hoang
  * @version 1.0
  * @since 2025-04-27

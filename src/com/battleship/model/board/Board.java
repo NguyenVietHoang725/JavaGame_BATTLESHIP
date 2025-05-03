@@ -7,7 +7,7 @@ import com.battleship.model.ship.Ship;
 
 /**
  * Lớp "Board" biểu diễn một bàn chơi của trò chơi
- * 
+ *
  * @author Nguyen Pham Hoang Mai
  * @version 1.0
  * @since 2025-04-27
@@ -23,7 +23,7 @@ public class Board {
 	// --- HÀM KHỞI TẠO ---
 	/**
 	 * Hàm khởi tạo với 2 tham số:
-	 * 
+	 *
 	 * @param board Mảng 2 chiều lưu trữ các ô trên bảng
 	 * @param lship Danh sách các tàu trên bảng
 	 */
@@ -39,8 +39,8 @@ public class Board {
 
 	// --- GETTER & SETTER ---
 	/**
-	 * Hàm lấy ô trên bảng	
-	 * 
+	 * Hàm lấy ô trên bảng
+	 *
 	 * @param x Tọa độ x của ô
 	 * @param y Tọa độ y của ô
 	 * @return ô trên bảng
@@ -51,7 +51,7 @@ public class Board {
 
 	/**
 	 * Hàm lấy mảng 2 chiều lưu trữ các ô trên bảng
-	 * 
+	 *
 	 * @return mảng 2 chiều lưu trữ các ô trên bảng
 	 */
 	public Node[][] getBoard() {
@@ -60,7 +60,7 @@ public class Board {
 
 	/**
 	 * Hàm lấy kích thước của bảng
-	 * 
+	 *
 	 * @return kích thước của bảng
 	 */
 	public int getBoardSize() {
@@ -70,13 +70,13 @@ public class Board {
 	// --- CÁC PHƯƠNG THỨC KHÁC ---
 	/**
 	 * Hàm thêm tàu vào danh sách tàu
-	 * 
+	 *
 	 * @param ship Tàu cần thêm
 	 */
 	public void addShip(Ship ship) {
 		ships.add(ship);
 	}
-	
+
 	public void addShip(int x, int y, int length, boolean isHorizontal) {
 	    Ship ship = new Ship(length, isHorizontal);
 	    for (int i = 0; i < length; i++) {
@@ -88,9 +88,13 @@ public class Board {
 	    ships.add(ship); // Thêm tàu vào danh sách tàu của board
 	}
 
+	public List<Ship> getShips() {
+	    return ships;
+	}
+
 	/**
 	 * Hàm kiểm tra tất cả tàu đã chìm hết chưa
-	 * 
+	 *
 	 * @return true nếu tất cả tàu đã chìm hết, false nếu không
 	 */
 	public boolean allShipsSunk() {
@@ -105,7 +109,7 @@ public class Board {
 
 	/**
 	 * Hàm kiểm tra tọa độ có hợp lệ hay không
-	 * 
+	 *
 	 * @param x Tọa độ x của ô
 	 * @param y Tọa độ y của ô
 	 * @return true nếu tọa độ có hợp lệ, false nếu không

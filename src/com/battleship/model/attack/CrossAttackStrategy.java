@@ -9,7 +9,7 @@ import com.battleship.model.board.Node;
 
 /**
  * Lớp "CrossAttackStrategy" biểu diễn chiến lược tấn công dẫu cộng trong trò chơi
- * 
+ *
  * @author Nguyen Viet Hoang
  * @version 1.0
  * @since 2025-04-27
@@ -17,10 +17,10 @@ import com.battleship.model.board.Node;
 
 public class CrossAttackStrategy implements IAttackStrategy {
 	private static final int[][] DELTAS = {{0, 0}, {0, 1}, {0, -1}, {1, 0}, {-1, 0}}; // Các ô cần tấn công
-	
+
 	/**
-	 * Hàm lấy danh sách các ô cần tấn công	
-	 * 
+	 * Hàm lấy danh sách các ô cần tấn công
+	 *
 	 * @param x Tọa độ x của ô
 	 * @param y Tọa độ y của ô
 	 * @param board Bảng trò chơi

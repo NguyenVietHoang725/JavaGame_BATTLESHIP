@@ -12,7 +12,7 @@ import com.battleship.model.board.Node;
 
 /**
  * Lớp "AttackLogic" biểu diễn logic tấn công trong trò chơi, sử dụng các chiến lược tấn công khác nhau
- * 
+ *
  * @author Nguyen Viet Hoang
  * @version 1.0
  * @since 2025-04-27
@@ -23,11 +23,11 @@ public class AttackLogic {
 	private final Board board; // Bảng trò chơi
 	private final AttackInventory atkInv; // Kho tấn công
 	private final Map<AttackType, IAttackStrategy> strategies; // Các chiến lược tấn công
-	
+
 	// --- HÀM KHỞI TẠO ---
 	/**
 	 * Hàm khởi tạo với 2 tham số:
-	 * 
+	 *
 	 * @param board Bảng trò chơi
 	 * @param atkInv Kho tấn công
 	 */
@@ -41,7 +41,7 @@ public class AttackLogic {
         strategies.put(AttackType.RANDOM, new RandomAttackStrategy());
         strategies.put(AttackType.DIAMOND, new DiamondAttackStrategy());
 	}
-	
+
 	/**
      * Kiểm tra hợp lệ trước khi tấn công.
      * @param type Loại đạn
@@ -51,12 +51,12 @@ public class AttackLogic {
      */
     public boolean canAttack(AttackType type, int x, int y) {
         Node center = board.getNode(x, y);
-        if (center.isHit()) return false;
-        if (!atkInv.hasAttack(type)) return false;
-        if (!strategies.containsKey(type)) return false;
+        if (center.isHit() || !atkInv.hasAttack(type) || !strategies.containsKey(type)) {
+			return false;
+		}
         return true;
     }
-	
+
     /**
      * Thực hiện tấn công (giả định đã kiểm tra hợp lệ trước đó).
      * @param type Loại đạn
@@ -66,7 +66,9 @@ public class AttackLogic {
      */
     public List<Node> attack(AttackType type, int x, int y) {
         // Có thể assert hoặc throw nếu muốn chắc chắn chỉ gọi khi hợp lệ
-        if (!canAttack(type, x, y)) return new ArrayList<>();
+        if (!canAttack(type, x, y)) {
+			return new ArrayList<>();
+		}
 
         IAttackStrategy strategy = strategies.get(type);
         List<Node> targets = strategy.getAttackPoints(x, y, board);

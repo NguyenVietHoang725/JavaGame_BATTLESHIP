@@ -9,7 +9,7 @@ import com.battleship.model.board.Node;
 
 /**
  * Lớp "SingleAttackStrategy" biểu diễn chiến lược tấn công đơn trong trò chơi
- * 
+ *
  * @author Nguyen Viet Hoang
  * @version 1.0
  * @since 2025-04-27
@@ -19,7 +19,7 @@ public class SingleAttackStrategy implements IAttackStrategy {
 
 	/**
 	 * Hàm lấy danh sách các ô cần tấn công
-	 * 
+	 *
 	 * @param x Tọa độ x của ô
 	 * @param y Tọa độ y của ô
 	 * @param board Bảng trò chơi

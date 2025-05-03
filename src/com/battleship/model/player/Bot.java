@@ -7,7 +7,7 @@ import com.battleship.model.board.Board;
 
 /**
  * Lớp "Bot" biểu diễn bot trong trò chơi
- * 
+ *
  * @author Nguyen Viet Hoang
  * @version 1.0
  * @since 2025-04-28
@@ -34,7 +34,7 @@ public class Bot extends Player {
     // --- CÁC PHƯƠNG THỨC KHÁC ---
     /**
      * Hàm chọn nước đi tiếp theo dựa trên chiến lược hiện tại.
-     * 
+     *
      * @param opponentBoard Bàn cờ của đối thủ (người chơi)
      * @return int[] {x, y} là tọa độ bot sẽ bắn
      */
@@ -47,7 +47,7 @@ public class Bot extends Player {
 
     /**
      * Hàm kiểm tra xem bot có thể sử dụng kiểu tấn công hay không.
-     * 
+     *
      * @param type Kiểu tấn công
      * @return true nếu bot có thể sử dụng kiểu tấn công, false nếu không
      */
@@ -58,7 +58,7 @@ public class Bot extends Player {
 
     /**
      * Hàm kiểm tra xem bot có thể tấn công hay không.
-     * 
+     *
      * @param x Tọa độ x của ô
      * @param y Tọa độ y của ô
      * @param type Kiểu tấn công

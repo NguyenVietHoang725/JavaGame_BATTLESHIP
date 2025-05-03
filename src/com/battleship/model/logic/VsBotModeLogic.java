@@ -1,18 +1,18 @@
 package com.battleship.model.logic;
 
-import com.battleship.model.player.Player;
-import com.battleship.model.player.Bot;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.battleship.enums.AttackType;
 import com.battleship.interfaces.INotifiableBotStrategy;
 import com.battleship.model.attack.AttackLogic;
 import com.battleship.model.board.Node;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.battleship.model.player.Bot;
+import com.battleship.model.player.Player;
 
 /**
  * Lớp "VsBotModeLogic" biểu diễn logic của chế độ chơi người chơi vs bot
- * 
+ *
  * @author Nguyen Viet Hoang
  * @version 1.0
  * @since 2025-04-28
@@ -44,15 +44,16 @@ public class VsBotModeLogic extends GameLogic {
 
     /**
      * Người chơi tấn công bot
-     * 
+     *
      * @param type Kiểu tấn công
      * @param x Tọa độ x
      * @param y Tọa độ y
      * @return Danh sách các node bị bắn trúng
      */
     public List<Node> playerAttack(AttackType type, int x, int y) {
-        if (!playerTurn || isGameOver()) return new ArrayList<>();
-        if (!player.canAttack(x, y, type)) return new ArrayList<>();
+        if (!playerTurn || isGameOver() || !player.canAttack(x, y, type)) {
+			return new ArrayList<>();
+		}
         List<Node> result = playerAttackLogic.attack(type, x, y);
         playerTurn = false;
         return result;
@@ -60,11 +61,13 @@ public class VsBotModeLogic extends GameLogic {
 
     /**
      * Bot tấn công người chơi
-     * 
+     *
      * @return Danh sách các node bị bắn trúng
      */
     public List<Node> botAttack() {
-        if (playerTurn || isGameOver()) return new ArrayList<>();
+        if (playerTurn || isGameOver()) {
+			return new ArrayList<>();
+		}
         int[] coords = bot.chooseAttack(player.getBoard());
         AttackType type = AttackType.SINGLE;
         if (!bot.canAttack(coords[0], coords[1], type)) {
@@ -83,7 +86,7 @@ public class VsBotModeLogic extends GameLogic {
 
     /**
      * Kiểm tra game đã kết thúc chưa
-     * 
+     *
      * @return true nếu game đã kết thúc, false nếu ngược lại
      */
     @Override
@@ -94,7 +97,7 @@ public class VsBotModeLogic extends GameLogic {
 
     /**
      * Kiểm tra người chơi đã thắng chưa
-     * 
+     *
      * @return true nếu người chơi đã thắng, false nếu ngược lại
      */
     @Override
@@ -104,9 +107,9 @@ public class VsBotModeLogic extends GameLogic {
 
     /**
      * Kiểm tra lượt người chơi
-     * 
+     *
      * @return true nếu lượt người chơi, false nếu ngược lại
-     */ 
+     */
     public boolean isPlayerTurn() {
         return playerTurn;
     }
